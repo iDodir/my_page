@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.urls import reverse
-from django.template.loader import render_to_string
 
 # Create your views here.
 
@@ -29,8 +28,15 @@ types = {
 
 
 def get_info_about_sign_zodiac(request, sign_zodiac: str):
-    response = render_to_string('horoscope/info_zodiac.html')
-    return HttpResponse(response)
+    description = zodiac_dict.get(sign_zodiac)
+    zodiacs = list(zodiac_dict)
+    data = {
+        'description_zodiac': description,
+        'sign': sign_zodiac,
+        'zodiacs': zodiacs,
+        'sign_name': description.split()[0],
+    }
+    return render(request, 'horoscope/info_zodiac.html', context=data)
 
 
 def get_info_about_sign_zodiac_by_number(request, sign_zodiac: int):
@@ -44,16 +50,11 @@ def get_info_about_sign_zodiac_by_number(request, sign_zodiac: int):
 
 def index(request):
     zodiacs = list(zodiac_dict)
-    li_elements = ''
-    for sign in zodiacs:
-        redirect_path = reverse('horoscope-name', args=[sign])
-        li_elements += f"<li><a href='{redirect_path}'>{sign.title()}</a></li>"
-    response = f"""
-    <ul>
-        {li_elements}
-    </ul>
-    """
-    return HttpResponse(response)
+    context = {
+        'zodiacs': zodiacs,
+        'zodiac_dict': {},
+    }
+    return render(request, 'horoscope/index.html', context=context)
 
 
 def get_all_types(request):

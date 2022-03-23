@@ -1,11 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Гороскоп</title>
-</head>
-<body>
-    <h1>Приложение Гороскоп</h1>
-    <h2>Близнецы - третий знак зодиака, планета Меркурий (с 22 мая по 21 июня).</h2>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block css_additional %}
+    <link rel="stylesheet" href=" {% static 'horoscope/css/info.css' %} ">
+{% endblock %}
+
+<{% block title %}
+    Гороскоп для {{ sign|upper }}
+{% endblock %}
+
+{% block content %}
+
+    {% include 'includes/navbar.html' %}
+    <h2>{{ sign_name }}</h2>
+    {% if description_zodiac is None %}
+        <h2>Неправильный знак зодиака - {{ sign|capfirst }}.</h2>
+    {% else %}
+        <h2> {{ description_zodiac|capfirst }} </h2>
+    {% endif %}
+{% endblock %}
